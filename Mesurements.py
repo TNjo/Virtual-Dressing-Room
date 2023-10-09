@@ -31,13 +31,6 @@ HomeButton = cv2.imread("Resources/Home.png", cv2.IMREAD_UNCHANGED)
 counterRight = 0
 counterLeft = 0
 selectionSpeed = 15
-outputfilepath = "output.txt"
-with open(outputfilepath, 'w') as outputFile:
-    # Iterate through the list of shirts and write them to the file
-    for shirt in listShirts:
-        outputFile.write(shirt + '\n')
-    # Close the file
-outputFile.close()
 
 
 def start_new_process():
@@ -57,17 +50,28 @@ while True:
     img = cvzone.overlayPNG(img, ShirtButton, (1024, 128))
     img = detector.findPose(img)
     lmList, bboxInfo = detector.findPosition(img, bboxWithHands=False, draw=False)
-
     if lmList:
         center = bboxInfo["center"]
         lm11 = lmList[11][1:3]  # Left shoulder coordinates (x, y) in pixels
         lm12 = lmList[12][1:3]  # Right shoulder coordinates (x, y) in pixels
         lm23 = lmList[15][1:3]
-        # print(lm11)
+        # print(lm11, lm12, lm23)
         # print("Width:", lm11[0] - lm12[0])
         # print("Height:", lm23[1] - lm12[1])
+
+        w = lm11[0] - lm12[0]
+        W = 39
+        f = 666
+        d = (W * f) / w
         imgShirt = cv2.imread(os.path.join(shirtFolderPath, listShirts[ImageNumber]), cv2.IMREAD_UNCHANGED)
         widthOfShirt = int((lm11[0] - lm12[0]) * fixedRatio)
+        # print("Width of shirt:", widthOfShirt)
+        widthOfShirt1 = (lm11[0] - lm12[0]) * fixedRatio
+        # print("Width of shirt1:", widthOfShirt1)
+        # print("Distance:", d)
+        ws = (widthOfShirt1 * d)
+        real_width = int(ws/1000)
+        print("Real Width:", real_width)
         # print(widthOfShirt)
         try:
             imgShirt = cv2.resize(imgShirt, (widthOfShirt,
@@ -123,8 +127,6 @@ while True:
                     cap.release()
                     cv2.destroyAllWindows()
                     start_new_process1()
-
-
 
             else:
                 counterRight = 0
