@@ -10,7 +10,7 @@ import time
 width, height = 1280, 720
 
 # Open the camera with the desired resolution
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 cap.set(3, width)  # 3 is the identifier for width
 cap.set(4, height)  # 4 is the identifier for height
 
